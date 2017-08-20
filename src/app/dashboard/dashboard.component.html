@@ -1,0 +1,82 @@
+<div class="ui stackable centered padded grid">
+
+	<div class="four wide widescreen five wide large screen six wide computer sixteen wide tablet column">
+
+		<h2>Current shift</h2>
+		<app-current-shift></app-current-shift>
+
+	<!--</div>-->
+	<!--<div class="six wide widescreen seven wide large screen eight wide computer sixteen wide tablet column">-->
+
+		<h2>Schedule shift</h2>
+		<app-schedule-shift></app-schedule-shift>
+
+	</div>
+
+	<div class="eight wide widescreen nine wide large screen ten wide computer sixteen wide tablet column">
+
+		<h2>Agents</h2>
+
+		<div class="ui three column doubling grid">
+			<div *ngFor="let agent of agents" class="column">
+				<div class="ui fluid card">
+					<div class="content">
+						<div class="description">{{agent.name}}</div>
+						<div class="meta">
+							{{agent.email}}
+						</div>
+					</div>
+					<button *ngIf="currentShift.agent.id != agent.id" class="ui bottom positive button" (click)="activate(agent)"
+					        [ngClass]="{'loading': agent == agentsActivationInProgress}">
+						Activate
+					</button>
+					<button *ngIf="currentShift.agent.id == agent.id" class="ui bottom basic positive button" disabled>
+						Active
+					</button>
+				</div>
+			</div>
+		</div>
+		<div>
+			<br>
+			<a routerLink="/agents">Show all agents</a>
+		</div>
+
+	</div>
+
+	<div class="twelve wide widescreen fourteen wide large screen sixteen wide computer column">
+
+		<h2>Upcoming shifts</h2>
+
+		<table class="ui striped celled table">
+			<thead>
+				<tr>
+					<th>Order</th>
+					<th>Agent</th>
+					<th>Starts at</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let shift of upcomingShifts; let i = index">
+					<td>
+						{{shift.state === 'DEPLOYED' ? 'Running' : i + '. Upcoming'}}
+					</td>
+					<td>{{shift.agent.name}}</td>
+					<td>{{shift.start}}</td>
+					<td>
+						<button *ngIf="shift.state === 'PLANNED'" class="ui button" type="button" (click)="deleteShift(shift)"
+						        [ngClass]="{'loading': shiftsDeletionInProgress == shift}">
+							Delete
+						</button>
+					</td>
+				</tr>
+				<tr *ngIf="!upcomingShifts || !upcomingShifts.length">
+					<td colspan="4">No shift yet</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<a routerLink="/shifts">Show all shifts</a>
+	</div>
+
+</div>

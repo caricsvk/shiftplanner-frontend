@@ -7,4 +7,13 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
 
+	public componentInitialized: boolean = true;
+
+	constructor() {
+	}
+
+	reload(): void {
+		this.componentInitialized = false;
+		setTimeout(() => this.componentInitialized = true);
+	}
 }

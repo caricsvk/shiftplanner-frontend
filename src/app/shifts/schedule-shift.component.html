@@ -1,0 +1,20 @@
+<form class="ui big form" (ngSubmit)="save()">
+	<div class="ui segment">
+		<div class="field">
+			<label>
+				Agent
+			</label>
+			<milo-select [options]="allAgents" value="name" [fluid]="true" (onChange)="newShift.agent=$event"></milo-select>
+		</div>
+		<div class="field">
+			<label>Shift Start</label>
+			<milo-input-calendar name="datetime" [value]="newShift.start" (onChange)="setNewShiftStart($event)"></milo-input-calendar>
+		</div>
+		<div class="field">
+			<button class="ui primary button" [ngClass]="{'loading': isShiftBeingSaved}">
+				<i class="save icon"></i>
+				Save
+			</button>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,3 @@
+[submodule "ang-milo"]
+	path = ang-milo
+	url = https://github.com/caricsvk/ang-milo.git

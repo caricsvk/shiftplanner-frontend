@@ -1,0 +1,18 @@
+<form class="ui big form">
+	<div class="ui green segment">
+		<div class="field">
+			<label>Agent</label>
+			<span>{{currentShift.agent.name}}, {{currentShift.agent.email}}, {{currentShift.agent.phone}}</span>
+		</div>
+		<div class="fields">
+			<div class="eight wide field">
+				<label>Duration</label>
+				<span>{{currentShift.duration | duration}}</span>
+			</div>
+			<div class="eight wide field">
+				<label>Next shift starts in</label>
+				<span>unknown</span>
+			</div>
+		</div>
+	</div>
+</form>

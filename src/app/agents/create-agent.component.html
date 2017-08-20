@@ -1,0 +1,26 @@
+<h2 *ngIf="!agent.id">Create agent</h2>
+<h2 *ngIf="agent.id">
+	Edit agent
+	<button class="ui button" (click)="resetAgent()">New</button>
+</h2>
+
+<form id="agents-form" class="ui big form" (ngSubmit)="save()">
+
+	<div class="four fields">
+		<div class="field">
+			<input type="text" name="name" placeholder="Name / Nick" [(ngModel)]="agent.name" />
+		</div>
+		<div class="field">
+			<input type="text" name="email" placeholder="E-mail" [(ngModel)]="agent.email" />
+		</div>
+		<div class="field">
+			<input type="text" name="phone" placeholder="Phone" [(ngModel)]="agent.phone" />
+		</div>
+		<div class="field">
+			<button type="submit" class="ui big fluid primary button" [ngClass]="{'loading': isSavingInProgress}">
+				Save {{agent.id ? 'agent [id:' + agent.id + ']': 'new agent'}}
+			</button>
+		</div>
+	</div>
+
+</form>
