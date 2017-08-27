@@ -34,6 +34,11 @@ export class AgentsComponent implements OnInit {
 						(errorResponse: Response) => alert(errorResponse.text())
 					);
 				}
+			}),
+			new TableAction('Activate', (agent: Agent) => {
+				this.agentsService.activate(agent).then(() => alert('Agent was activated!'),
+					(errorResponse: Response) => alert(errorResponse.text())
+				);
 			})
 		];
 		this.tableAdapter = new AgentsTableAdapter(this.agentsService, tableActions);

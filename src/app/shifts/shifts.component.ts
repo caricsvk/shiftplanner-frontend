@@ -77,7 +77,8 @@ class ShiftsTableAdapter extends TableAdapterBasic {
 				shift.getEnd() : shift.isStatePlanned() ? '' : 'now'),
 			new TableColumn("Duration", "duration", "number", (shift: Shift) => shift.isStatePlanned()
 				? '' : !shift.getEnd() ? 'In progress' :this.durationPipe.transform(shift.getDuration())
-			)
+			),
+			new TableColumn("State", "state", "select", undefined, ['PLANNED', 'DEPLOYED'])
 		];
 	}
 
