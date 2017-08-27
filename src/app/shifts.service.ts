@@ -58,13 +58,11 @@ export class ShiftsService {
 		this.http.get(this.apiPath, {search: "limit=1&order=start&orderType=DESC&state_exact=DEPLOYED"}).map((response: Response) =>
 			(<any>Object).assign(new Shift(), response.json()[0])
 		).subscribe((newShift: Shift) => {
-			if (newShift.id != this.currentShift.id) {
-				this.currentShiftStore.subscriber.next(newShift);
-				let wasCurrentShiftSet = !!this.currentShift.id;
-				this.currentShift = newShift;
-				if (wasCurrentShiftSet) {
-					this.dataChangeSubscriber.next(DataChangeType.EDIT);
-				}
+			this.currentShiftStore.subscriber.next(newShift);
+			let wasCurrentShiftChanged = newShift.id != this.currentShift.id;
+			this.currentShift = newShift;
+			if (wasCurrentShiftChanged) {
+				this.dataChangeSubscriber.next(DataChangeType.EDIT);
 			}
 		});
 	}
