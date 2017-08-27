@@ -3,5 +3,5 @@
 <milo-table [adapter]="shiftsTableAdapter"></milo-table>
 
 <p>
-	<!--Total duration: {{totalDuration | duration}}.-->
+	Total duration: {{totalDuration | async | duration}}.
 </p>

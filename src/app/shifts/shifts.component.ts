@@ -27,6 +27,7 @@ export class ShiftsComponent implements OnInit {
 				this.shiftsTableAdapter.setState(TableState.create(params));
 			}
 		});
+		this.totalDuration = this.shiftsService.lastSearchDurationSum();
 	}
 
 	ngOnInit() {
