@@ -14,8 +14,9 @@ export class ScheduleShiftComponent implements OnInit, AfterViewInit {
 
 	allAgents: Agent[] = [];
 	newShift = new Shift();
+	newShiftMinDate = new Date();
 	isShiftBeingSaved = false;
-	
+
 	private jForm: any;
 
 	constructor(private shiftsService: ShiftsService,
@@ -53,9 +54,11 @@ export class ScheduleShiftComponent implements OnInit, AfterViewInit {
 	}
 
 	setNewShiftStart(date: {date: Date}) {
-		let utcDate = date.date;
-		let newStart = new Date(utcDate.getTime() - utcDate.getTimezoneOffset()*60*1000)
-		this.newShift.start = newStart.toISOString().substr(0, 22);
+		if (date && date.date) {
+			let utcDate = date.date;
+			let newStart = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60 * 1000)
+			this.newShift.start = newStart.toISOString().substr(0, 22);
+		}
 	}
 
 }

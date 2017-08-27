@@ -4,11 +4,13 @@
 			<label>
 				Agent
 			</label>
-			<milo-select [options]="allAgents" value="name" [fluid]="true" (onChange)="newShift.agent=$event"></milo-select>
+			<milo-select name="agent" [options]="allAgents" value="name" [fluid]="true"
+			             (onChange)="newShift.agent=$event"></milo-select>
 		</div>
 		<div class="field">
 			<label>Shift Start</label>
-			<milo-input-calendar name="datetime" [value]="newShift.start" (onChange)="setNewShiftStart($event)"></milo-input-calendar>
+			<milo-input-calendar name="datetime" [value]="newShift.start" [minDate]="newShiftMinDate"
+			                     (onChange)="setNewShiftStart($event)"></milo-input-calendar>
 		</div>
 		<div class="field">
 			<button class="ui primary button" [ngClass]="{'loading': isShiftBeingSaved}">
