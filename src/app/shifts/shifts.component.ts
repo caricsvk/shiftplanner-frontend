@@ -4,7 +4,9 @@ import {TableState} from "../../../ang-milo/src/app/table/table-state";
 import {TableColumn} from "../../../ang-milo/src/app/table/table-column";
 import {ShiftsService} from "../shifts.service";
 import {DurationPipe} from "../../../ang-milo/src/app/pipes/duration.pipe";
-import {Shift, ShiftStateType} from "./shift";
+import {Shift} from "./shift";
+import {TableAdapter} from "../../../ang-milo/src/app/table/table-adapter";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
 	selector: 'app-shifts',
@@ -13,24 +15,48 @@ import {Shift, ShiftStateType} from "./shift";
 })
 export class ShiftsComponent implements OnInit {
 
-	shiftsTableAdapter: ShiftsTableAdapter;
+	shiftsTableAdapter: TableAdapter;
 	totalDuration = null;
 
 	constructor(private shiftsService: ShiftsService,
-	            private durationPipe: DurationPipe) {
+	            private durationPipe: DurationPipe,
+	            private activatedRoute: ActivatedRoute,
+	            private router: Router) {
+		activatedRoute.queryParams.subscribe(params => {
+			if (this.shiftsTableAdapter) {
+				this.shiftsTableAdapter.setState(TableState.create(params));
+			}
+		});
 	}
 
 	ngOnInit() {
-		this.shiftsTableAdapter = new ShiftsTableAdapter(this.shiftsService, this.durationPipe);
+		let initialTableState = TableState.create(this.activatedRoute.snapshot.queryParams);
+		if (! initialTableState.order) {
+			initialTableState.order = 'start';
+		}
+		// put initial state to the url and initialize table
+		this.navigateByState(initialTableState, true);
+		this.shiftsTableAdapter = new ShiftsTableAdapter(initialTableState, this.shiftsService, this.durationPipe);
+		this.shiftsTableAdapter.onStateChange().subscribe(state => this.navigateByState(state));
+	}
+
+	private navigateByState(tableState: TableState, replaceUrl = false) {
+		this.router.navigate(['.'], {
+			queryParams: tableState,
+			preserveFragment: true,
+			relativeTo: this.activatedRoute,
+			replaceUrl: replaceUrl
+		});
 	}
 
 }
 
 class ShiftsTableAdapter extends TableAdapterBasic {
 	
-	constructor(private shiftsService: ShiftsService,
+	constructor(initialTableState: TableState,
+	            private shiftsService: ShiftsService,
 	            private durationPipe: DurationPipe) {
-		super();
+		super(initialTableState);
 	}
 
 	fetchData(tableState:TableState):Promise<any> {
@@ -44,13 +70,13 @@ class ShiftsTableAdapter extends TableAdapterBasic {
 	getAllColumns():TableColumn[] {
 		return [
 		// columns.push(new TableColumn("ID", "id", "number"));
+			new TableColumn("Agent", "agent.name", "entity", function (row) {return row.agent.name}),
 			new TableColumn("From", "start", "datetime"),
 			new TableColumn("To", "end", "datetime", (shift: Shift) => shift.getEnd() ?
 				shift.getEnd() : shift.isStatePlanned() ? '' : 'now'),
 			new TableColumn("Duration", "duration", "number", (shift: Shift) => shift.isStatePlanned()
 				? '' : !shift.getEnd() ? 'In progress' :this.durationPipe.transform(shift.getDuration())
-			),
-			new TableColumn("Agent", "agent.name", "entity", function (row) {return row.agent.name})
+			)
 		];
 	}
 
