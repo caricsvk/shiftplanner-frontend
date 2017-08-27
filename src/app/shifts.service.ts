@@ -9,6 +9,7 @@ export class ShiftsService {
 
 	private apiPath: string = "/api/shifts";
 
+	private upcomingShiftStore: ReplayStore<Shift> = new ReplayStore();
 	private currentShiftStore: ReplayStore<Shift> = new ReplayStore();
 	private currentShift = new Shift();
 
@@ -20,9 +21,14 @@ export class ShiftsService {
 
 	constructor(private http:Http) {
 		this.fetchCurrentShift();
-		this.dataChangeEvents.subscribe(() => this.fetchCurrentShift());
+		this.fetchUpcomingShift();
+		this.dataChangeEvents.subscribe(() => {
+			this.fetchCurrentShift();
+			this.fetchUpcomingShift();
+		});
 		setInterval(() => {
 			this.fetchCurrentShift();
+			this.fetchUpcomingShift();
 		}, 60*1000)
 	}
 
@@ -61,6 +67,10 @@ export class ShiftsService {
 		return this.currentShiftStore.observable;
 	}
 
+	public getUpcomingShift(): Observable<Shift> {
+		return this.upcomingShiftStore.observable;
+	}
+
 	private fetchDurationSum(querySearchParams:URLSearchParams): void {
 		this.http.get(`${this.apiPath}/sum-duration`, {search: querySearchParams})
 			.subscribe((response:Response) => this.durationSumStore.subscriber.next(response.json()));
@@ -77,6 +87,12 @@ export class ShiftsService {
 				this.dataChangeSubscriber.next(DataChangeType.EDIT);
 			}
 		});
+	}
+
+	private fetchUpcomingShift(): void {
+		this.http.get(this.apiPath, {search: "limit=1&order=start&orderType=ASC&state_exact=PLANNED"}).map((response: Response) =>
+			(<any>Object).assign(new Shift(), response.json()[0])
+		).subscribe((shift: Shift) => this.upcomingShiftStore.subscriber.next(shift));
 	}
 
 	private mapResponseToShifts(response: Response): Shift[] {
