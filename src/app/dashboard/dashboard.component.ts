@@ -5,6 +5,7 @@ import {AgentsService} from "../agents.service";
 import {Shift} from "../shifts/shift";
 import {ShiftsService} from "../shifts.service";
 import {SubscribingComponent} from "../../../ang-milo/src/app/subscribing-component";
+import {NotificationComponent} from "../../../ang-milo/src/app/notification/notification.component";
 
 @Component({
 	selector: 'app-dashboard',
@@ -37,7 +38,7 @@ export class DashboardComponent extends SubscribingComponent implements OnInit {
 			agent => this.agentsActivationInProgress = null,
 			(errorResponse: Response) => {
 				this.agentsActivationInProgress = null;
-				alert('Activation failed: ' + errorResponse.text());
+				NotificationComponent.error('Activation failed: ' + errorResponse.text());
 			}
 		);
 	}
@@ -48,7 +49,7 @@ export class DashboardComponent extends SubscribingComponent implements OnInit {
 			() => this.shiftsDeletionInProgress = null,
 			(errorResponse: Response) => {
 				this.shiftsDeletionInProgress = null;
-				alert('Deletion failed: ' + errorResponse.text());
+				NotificationComponent.error('Deletion failed: ' + errorResponse.text());
 			}
 		);
 	}

@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, AfterViewInit, ElementRef} from "@angular/core";
 import {AgentsService} from "../agents.service";
 import {Agent} from "./agent";
+import {NotificationComponent} from "../../../ang-milo/src/app/notification/notification.component";
 
 declare var jQuery: any;
 
@@ -46,7 +47,7 @@ export class CreateAgentComponent implements AfterViewInit {
 			}, (response: Response) => {
 				this.isSavingInProgress = false;
 				console.log('error', response);
-				alert('error')
+				NotificationComponent.error('error')
 			}
 		);
 	}

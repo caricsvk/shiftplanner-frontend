@@ -6,6 +6,7 @@ import {AgentsService} from "../agents.service";
 import {TableColumn} from "../../../ang-milo/src/app/table/table-column";
 import {Agent} from "./agent";
 import {TableAction} from "../../../ang-milo/src/app/table/table-action";
+import {NotificationComponent} from "../../../ang-milo/src/app/notification/notification.component";
 
 @Component({
 	selector: 'app-agents',
@@ -36,8 +37,8 @@ export class AgentsComponent implements OnInit {
 				}
 			}),
 			new TableAction('Activate', (agent: Agent) => {
-				this.agentsService.activate(agent).then(() => alert('Agent was activated!'),
-					(errorResponse: Response) => alert(errorResponse.text())
+				this.agentsService.activate(agent).then(() => NotificationComponent.success('Agent was activated!'),
+					(errorResponse: Response) => NotificationComponent.error(errorResponse.text())
 				);
 			})
 		];
