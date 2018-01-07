@@ -13,7 +13,7 @@ export class ShiftsService {
 	private currentShiftStore: ReplayStore<Shift> = new ReplayStore();
 	private currentShift = new Shift();
 
-	private durationSumStore: ReplayStore<{}> = new ReplayStore();
+	private durationSumStore: ReplayStore<{value: number}> = new ReplayStore();
 
 	public dataChangeSubscriber: Subscriber<DataChangeType> = Subscriber.create();
 	public dataChangeEvents: Observable<DataChangeType> = Observable.create(subscriber => this.dataChangeSubscriber = subscriber)
@@ -54,8 +54,8 @@ export class ShiftsService {
 		return this.http.get(this.apiPath, {search: querySearchParams}).map(this.mapResponseToShifts).toPromise();
 	}
 
-	public lastSearchDurationSum(): Observable<number> {
-		return this.durationSumStore.observable.map((response: {value}) => response.value);
+	public lastSearchDurationSum() {
+		return this.durationSumStore.observable.map((response: {value: number}) => response.value);
 	}
 
 	public count(querySearchParams:URLSearchParams):Promise<number> {
@@ -63,11 +63,11 @@ export class ShiftsService {
 			.map((response:Response) => response.json().value).toPromise();
 	}
 
-	public getCurrentShift(): Observable<Shift> {
+	public getCurrentShift() {
 		return this.currentShiftStore.observable;
 	}
 
-	public getUpcomingShift(): Observable<Shift> {
+	public getUpcomingShift() {
 		return this.upcomingShiftStore.observable;
 	}
 

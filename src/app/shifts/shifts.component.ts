@@ -53,7 +53,7 @@ export class ShiftsComponent implements OnInit {
 }
 
 class ShiftsTableAdapter extends TableAdapterBasic {
-	
+
 	constructor(initialTableState: TableState,
 	            private shiftsService: ShiftsService,
 	            private durationPipe: DurationPipe) {
